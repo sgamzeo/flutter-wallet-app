@@ -5,16 +5,21 @@ class VerificationDetailsView extends StatelessWidget {
   final String email;
   final String verificationCode;
 
-  const VerificationDetailsView({Key? key, required this.email, required this.verificationCode}) : super(key: key);
+  const VerificationDetailsView(
+      {Key? key, required this.email, required this.verificationCode})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final FirebaseAuthService _firebaseAuthService = FirebaseAuthService(); // FirebaseAuthService instance oluştur
+    final FirebaseAuthService _firebaseAuthService =
+        FirebaseAuthService(); // FirebaseAuthService instance oluştur
 
     String name = ''; // Ad alanı
     String surname = ''; // Soyad alanı
     String phoneNumber = ''; // Telefon Numarası alanı
     String identityNo = ''; // TC Kimlik Numarası alanı
+
+    double initialBalance = 0.0; // Varsayılan başlangıç bakiyesi
 
     return Scaffold(
       appBar: AppBar(
@@ -39,28 +44,32 @@ class VerificationDetailsView extends StatelessWidget {
             ),
             SizedBox(height: 16.0),
             TextField(
-              onChanged: (value) => name = value, // Ad alanına girilen değeri al
+              onChanged: (value) =>
+                  name = value, // Ad alanına girilen değeri al
               decoration: InputDecoration(
                 labelText: 'Ad',
               ),
             ),
             SizedBox(height: 16.0),
             TextField(
-              onChanged: (value) => surname = value, // Soyad alanına girilen değeri al
+              onChanged: (value) =>
+                  surname = value, // Soyad alanına girilen değeri al
               decoration: InputDecoration(
                 labelText: 'Soyad',
               ),
             ),
             SizedBox(height: 16.0),
             TextField(
-              onChanged: (value) => phoneNumber = value, // Telefon Numarası alanına girilen değeri al
+              onChanged: (value) => phoneNumber =
+                  value, // Telefon Numarası alanına girilen değeri al
               decoration: InputDecoration(
                 labelText: 'Telefon Numarası',
               ),
             ),
             SizedBox(height: 16.0),
             TextField(
-              onChanged: (value) => identityNo = value, // TC Kimlik Numarası alanına girilen değeri al
+              onChanged: (value) => identityNo =
+                  value, // TC Kimlik Numarası alanına girilen değeri al
               decoration: InputDecoration(
                 labelText: 'TC Kimlik Numarası',
               ),
@@ -73,6 +82,7 @@ class VerificationDetailsView extends StatelessWidget {
                   surname: surname,
                   identityNo: identityNo,
                   phoneNumber: phoneNumber,
+                  initialBalance: initialBalance,
                 );
                 Navigator.pushNamed(context, '/wallet');
               },

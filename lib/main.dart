@@ -1,28 +1,37 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
-import 'package:flutter_wallet_app/views/login/login_auth_view.dart';
-import 'package:flutter_wallet_app/service/routes.dart'; // AppRoutes'ı doğru yoldan import ettiğinizden emin olun
+import 'package:login_screen/locator.dart';
+import 'package:login_screen/services/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_wallet_app/service/auth_provider.dart'; // AuthProvider sınıfını doğru yoldan import ettiğinizden emin olun
+import 'screens/login_screen/login_screen.dart';
+import 'utils/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-
-void main() async {
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  setupLocator();
+
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider<AuthProvider>(create: (context) => locator.get<AuthProvider>(),)
+  ], child: const MyApp(),));
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AuthProvider(), // AuthProvider'ı ChangeNotifierProvider ile sarmalayın
-      child: MaterialApp(
-        initialRoute: AppRoutes.startingpage, // İlk açılan ekranın yolu
-        routes: AppRoutes.routes, // Rotaları kullanarak MaterialApp'a tanımlayın
+    return MaterialApp(
+      title: 'Firebase Auth',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        scaffoldBackgroundColor: kBackgroundColor,
+        textTheme: Theme.of(context).textTheme.apply(
+              bodyColor: Colors.white,
+              fontFamily: 'Montserrat',
+            ),
       ),
+      home: const LoginWScreen(),
     );
   }
 }

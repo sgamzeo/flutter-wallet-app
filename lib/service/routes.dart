@@ -23,12 +23,11 @@ class AppRoutes {
 
   static final Map<String, WidgetBuilder> routes = {
     startingpage: (context) => StartingView(),
-    login: (context) => LoginAuthView(),
-    pin: (context) {
-      final arguments = ModalRoute.of(context)!.settings.arguments as String?;
-      return LoginPasswordView(email: arguments ?? '');
-    },
-    signup: (context) => SignUpAuthView(),
+    login: (context) => LoginView(),
+    pin: (context) => LoginPasswordView(email:''),
+    
+    signup: (context) => SignUpView(title: '', description: '',),
+
 
     wallet: (context) => WalletView(
           

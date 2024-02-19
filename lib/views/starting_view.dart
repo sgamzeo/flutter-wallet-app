@@ -1,7 +1,5 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
-import 'package:flutter_wallet_app/service/routes.dart'; // AppRoutes'ı doğru yoldan import ettiğinizden emin olun
+import 'package:flutter_wallet_app/components/button.dart';
 
 class StartingView extends StatelessWidget {
   const StartingView({Key? key}) : super(key: key);
@@ -10,24 +8,26 @@ class StartingView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Starting View'),
+        title: Text('Hoş Geldiniz'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ElevatedButton(
+            Button(
+              text: 'Giriş Yap',
+              
               onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.signup); // Kaydol sayfasına git
+                Navigator.pushNamed(context, '/login');
               },
-              child: Text('Kaydol'),
             ),
-            SizedBox(height: 20), // Araya boşluk ekleyelim
-            ElevatedButton(
+            SizedBox(height: 20),
+            Button(
+              text: 'Kayıt Ol',
               onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.login); // Giriş yap sayfasına git
+                Navigator.pushNamed(context, '/signup');
               },
-              child: Text('Giriş Yap'),
             ),
           ],
         ),

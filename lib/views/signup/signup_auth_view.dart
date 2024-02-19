@@ -1,40 +1,41 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
-import 'package:flutter_wallet_app/service/routes.dart';
+import 'package:flutter_wallet_app/components/button.dart';
+import 'package:flutter_wallet_app/components/text_field.dart';
 import 'package:flutter_wallet_app/viewmodels/signup_viewmodel.dart';
 
-class SignUpAuthView extends StatelessWidget {
-  final SignUpViewModel viewModel = SignUpViewModel();
-
-  SignUpAuthView({super.key});
+class SignUpView extends StatelessWidget {
+  const SignUpView({Key? key, required String title, required String description}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final signUpViewModel = SignUpViewModel();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Kaydol'),
+        title: const Text('Kayıt Ol'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
-              onChanged: (value) => viewModel.email = value,
-              decoration: InputDecoration(
-                labelText: 'E-posta',
-              ),
+            VerificationCodeTextInput(
+              onChanged: (value) {
+                signUpViewModel.email = value;
+              }, length: 99,
+          
             ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                // Kayıt Ol butonuna basıldığında yapılacak işlemler burada yer alacak
-                Navigator.pushNamed(context, AppRoutes.signupcode);
-              },
-              child: Text('Kayıt Ol'),
-            ),
+            const SizedBox(height: 16.0),
+            signUpViewModel.isEmailValid(signUpViewModel.email)
+                ? Button(
+                    text: 'Kayıt Ol',
+                    onPressed: () {
+                      // E-posta adresinin geçerli olduğunu kontrol et ve doğrulama kodu ekranına git
+                      signUpViewModel.goToVerificationCode(context);
+                    },
+                  )
+                : const SizedBox(), 
           ],
         ),
       ),

@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FirebaseAuthService {
   final CollectionReference usersCollection =
       FirebaseFirestore.instance.collection('users');
+  final CollectionReference walletsCollection = FirebaseFirestore.instance
+      .collection('wallets'); // Cüzdan koleksiyonunu ekleyin
 
   Future<bool> checkPassword(String email, String enteredPassword) async {
     try {
@@ -33,51 +35,26 @@ class FirebaseAuthService {
     }
   }
 
-
-//   Future<void> signUpUser({
-//   required String name,
-//   required String surname,
-//   required String identityNo,
-//   required String phoneNumber,
-// }) async {
-//   try {
-//     await usersCollection.add({
-//       'name': name,
-//       'surname': surname,
-//       'identityNo': identityNo,
-//       'phoneNumber': phoneNumber, // Yeni parametre
-//     });
-//     print('Kullanıcı başarıyla kaydedildi!');
-//   } catch (e) {
-//     print('Kullanıcı kaydı sırasında bir hata oluştu: $e');
-//     throw Exception('Kullanıcı kaydı başarısız oldu.');
-//   }
-// }
-
-// }
-
-
-class FirebaseAuthService {
-  final CollectionReference usersCollection =
-      FirebaseFirestore.instance.collection('users');
-  final CollectionReference walletsCollection =
-      FirebaseFirestore.instance.collection('wallets'); // Cüzdanlar koleksiyonunu tanımla
-
   Future<void> signUpUser({
     required String name,
     required String surname,
     required String identityNo,
+    required String phoneNumber,
+    required double initialBalance, // Başlangıç ​​bakiyesi
   }) async {
     try {
+      // Kullanıcı oluşturulduğunda bir cüzdan oluştur
       DocumentReference userRef = await usersCollection.add({
         'name': name,
         'surname': surname,
         'identityNo': identityNo,
+        'phoneNumber': phoneNumber,
       });
 
-      // Kullanıcı oluşturulduğunda bir cüzdan oluştur
-      await walletsCollection.add({
-        'userId': userRef.id, // Kullanıcı kimliğine atıfta bulun
+      // Cüzdan oluştur ve başlangıç ​​bakiyesi ile başlat
+      DocumentReference walletRef = await walletsCollection.add({
+        'userId': userRef.id,
+        'balance': initialBalance,
         // Diğer cüzdan özelliklerini ekle
       });
 
@@ -87,7 +64,6 @@ class FirebaseAuthService {
       throw Exception('Kullanıcı ve cüzdan kaydı başarısız oldu.');
     }
   }
+
+  signUpWithEmailAndPassword(String email, String password) {}
 }
-
-
-

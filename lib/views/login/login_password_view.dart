@@ -24,8 +24,8 @@ class LoginPasswordView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AuthPageInfo(
-              title: 'Giriş yap',
-              description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+              title: 'Giriş yap', description: '',
+             
             ),
             Expanded(
               child: Center(

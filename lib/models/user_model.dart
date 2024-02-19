@@ -1,42 +1,42 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UserModel {
-  final String userID;
+class User {
+  final String id;
+  final String name;
+  final String surname;
   final String email;
-  String username;
-  String profileURL;
-  double balance;
-  DateTime createdAt;
-  DateTime updatedAt;
+  final String phoneNumber;
+  final String identityNo;
 
-  UserModel({
-    required this.userID,
+  User({
+    required this.id,
+    required this.name,
+    required this.surname,
     required this.email,
-    required this.username,
-    this.profileURL = '',
-    this.balance = 0.0, // Başlangıç için
-    required this.createdAt,
-    required this.updatedAt,
+    required this.phoneNumber,
+    required this.identityNo,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'userID': userID,
-      'email': email,
-      'username': username,
-      'profileURL': profileURL,
-      'balance': balance,
-      'createdAt': createdAt ?? FieldValue.serverTimestamp(),
-      'updatedAt': updatedAt ?? FieldValue.serverTimestamp(),
-    };
+  // Firebase verilerinden User Nesnesi oluşturur.
+  factory User.fromFirestore(Map<String, dynamic> data, String documentId) {
+    return User(
+      id: documentId,
+      name: data['name'] ?? '',
+      surname: data['surname'] ?? '',
+      email: data['email'] ?? '',
+      phoneNumber: data['phoneNumber'] ?? '',
+      identityNo: data['identityNo'] ?? '',
+    );
   }
 
-  UserModel.fromMap(Map<String, dynamic> map)
-      : userID = map['userID'],
-        email = map['email'],
-        username = map['username'],
-        profileURL = map['profileURL'],
-        balance = map['balance'],
-        createdAt = (map['createdAt'] as Timestamp).toDate(),
-        updatedAt = (map['updatedAt'] as Timestamp).toDate();
+  // User nesnesini Firestore sınıfına dönüştürmek için bir yöntem
+  Map<String, dynamic> toFirestore() {
+    return {
+      'name': name,
+      'surname': surname,
+      'email': email,
+      'phoneNumber': phoneNumber,
+      'identityNo': identityNo,
+    };
+  }
 }

@@ -1,7 +1,11 @@
-// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors
+// ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_wallet_app/components/button.dart';
+import 'package:flutter_wallet_app/components/pin_fields.dart';
+import 'package:flutter_wallet_app/service/routes.dart';
 import 'package:flutter_wallet_app/viewmodels/signup_viewmodel.dart';
+
 
 class VerificationCodeView extends StatefulWidget {
   final String email;
@@ -13,7 +17,13 @@ class VerificationCodeView extends StatefulWidget {
 }
 
 class _VerificationCodeViewState extends State<VerificationCodeView> {
-  String enteredCode = '';
+  late String enteredCode; // enteredCode değişkenini 'late' olarak işaretleyin
+
+  @override
+  void initState() {
+    super.initState();
+    enteredCode = ''; // enteredCode'u başlangıçta boş bir string olarak ayarlayın
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,31 +43,22 @@ class _VerificationCodeViewState extends State<VerificationCodeView> {
               style: TextStyle(fontSize: 18.0),
             ),
             SizedBox(height: 16.0),
-            TextField(
+            VerificationCodeInput( // PinField widget'ını kullanın
+              length: 6, // Doğrulama kodunun uzunluğunu belirtin
               onChanged: (value) {
                 setState(() {
                   enteredCode = value;
                 });
               },
-              decoration: InputDecoration(
-                labelText: 'Doğrulama Kodu',
-              ),
             ),
             SizedBox(height: 16.0),
-            ElevatedButton(
+            Button( 
+              text: 'Doğrula',
               onPressed: () {
-                bool isCodeCorrect = SignUpViewModel().isCodeCorrect(enteredCode);
-                if (isCodeCorrect) {
-                  Navigator.pushNamed(context, '/signupdetails');
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Doğrulama kodu yanlış. Lütfen tekrar deneyin.'),
-                    ),
-                  );
-                }
+               Navigator.pushNamed(
+                    context,
+                    AppRoutes.signupdetails);
               },
-              child: Text('Doğrula'),
             ),
           ],
         ),

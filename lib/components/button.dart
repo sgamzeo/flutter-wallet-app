@@ -50,7 +50,7 @@ class Button extends StatelessWidget {
               text,
               style: TextStyle(
                 fontSize: 16,
-                color: textColor, // Buton metin rengi
+                color: Colors.black, // Buton metin rengi
               ),
             ),
           ],

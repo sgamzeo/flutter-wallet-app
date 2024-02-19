@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 
 class AuthPageInfo extends StatelessWidget {
   final String title;
-  final String description;
+  final String description = 'lorem ipsum dolor amey.';
+
 
   const AuthPageInfo({
     Key? key,
-    required this.title,
-    required this.description,
+    required this.title, required String description,
+   
+    
   }) : super(key: key);
 
   @override

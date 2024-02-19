@@ -1,71 +1,44 @@
-// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
-
 import 'package:flutter/material.dart';
-import 'package:flutter_wallet_app/service/firebase_auth.dart'; // Database servisini dahil edin
-import 'package:flutter_wallet_app/service/routes.dart';
+import 'package:flutter_wallet_app/viewmodels/login_viewmodel.dart';
+import 'package:provider/provider.dart';
 
-import '../../components/button.dart';
-
-class LoginAuthView extends StatelessWidget {
-  const LoginAuthView({Key? key}) : super(key: key);
-
+class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    String email = ''; // Kullanıcının girdiği e-posta adresini tutacak değişken
-
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Login'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Diğer widget'lar buraya eklenecek
-
-            // Kullanıcıdan e-posta girmesini isteyen TextField
             TextField(
               onChanged: (value) {
-                email = value; // TextField'dan gelen e-posta adresini al
+                Provider.of<LoginViewModel>(context, listen: false).email = value;
               },
               decoration: InputDecoration(
-                labelText: 'E-posta',
+                labelText: 'Email',
               ),
             ),
-
-            // Giriş yap butonu
-            Button(
-              text: 'Giriş yap',
-              textColor: Colors.black,
-              onPressed: () async {
-                // E-postanın var olup olmadığını kontrol etmeden önce e-postayı alın
-                bool emailExists =
-                    await FirebaseAuthService().checkEmailExists(email);
-
-                if (emailExists) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('E-posta doğru'),
-                    ),
-                  );
-                  // Eğer e-posta varsa, şifreyi kontrol etmek için pin ekranına git
-                  Navigator.pushNamed(
-                    context,
-                    AppRoutes.pin,
-                    arguments:
-                        email, // Girilen e-posta adresini pin ekranına argüman olarak geçir
-                  );
-                } else {
-                  // Eğer e-posta yoksa hata mesajı göster
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'E-posta adresi bulunamadı. Lütfen geçerli bir adres giriniz.',
-                      ),
-                    ),
-                  );
-                }
+            SizedBox(height: 20),
+            TextField(
+              onChanged: (value) {
+                Provider.of<LoginViewModel>(context, listen: false).password = value;
               },
+              decoration: InputDecoration(
+                labelText: 'Password',
+              ),
+              obscureText: true,
             ),
-
-            // Diğer widget'lar buraya eklenecek
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Provider.of<LoginViewModel>(context, listen: false).login(context);
+              },
+              child: Text('Login'),
+            ),
           ],
         ),
       ),

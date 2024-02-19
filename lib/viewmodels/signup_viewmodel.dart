@@ -40,9 +40,10 @@ class SignUpViewModel extends ChangeNotifier {
     );
   }
 
-  bool isCodeCorrect(String enteredCode) {
-  return enteredCode == "123456";
+  bool verifyCode(String verificationCode) {
+  // Burada verificationCode'un doğruluğunu kontrol et
+  // Örnek olarak şimdilik sabit bir doğrulama kodu olan "123456" ile kontrol ediyoruz
+  return verificationCode == "123456";
 }
-
 
 }
