@@ -1,24 +1,27 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_wallet_app/views/login/login_auth_view.dart';
+import 'package:flutter_wallet_app/service/routes.dart'; // AppRoutes'ı doğru yoldan import ettiğinizden emin olun
 import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_wallet_app/service/auth_provider.dart'; // AuthProvider sınıfını doğru yoldan import ettiğinizden emin olun
 import 'package:firebase_core/firebase_core.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(YourApp());
+  runApp(MyApp());
 }
 
-class YourApp extends StatelessWidget {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Yo'),
-        ),
+    return ChangeNotifierProvider(
+      create: (context) => AuthProvider(), // AuthProvider'ı ChangeNotifierProvider ile sarmalayın
+      child: MaterialApp(
+        initialRoute: AppRoutes.startingpage, // İlk açılan ekranın yolu
+        routes: AppRoutes.routes, // Rotaları kullanarak MaterialApp'a tanımlayın
       ),
     );
   }

@@ -13,7 +13,7 @@ class UserModel {
     required this.userID,
     required this.email,
     required this.username,
-    this.profileURL ='',
+    this.profileURL = '',
     this.balance = 0.0, // Başlangıç için
     required this.createdAt,
     required this.updatedAt,

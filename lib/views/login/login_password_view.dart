@@ -1,17 +1,23 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:flutter_wallet_app/components/auth_top.dart';
 import 'package:flutter_wallet_app/components/button.dart';
 import 'package:flutter_wallet_app/components/pin_fields.dart';
 import 'package:flutter_wallet_app/components/text_divider.dart';
-import 'package:flutter_wallet_app/components/text_field.dart';
+
+import 'package:flutter_wallet_app/service/firebase_auth.dart';
+import 'package:flutter_wallet_app/service/routes.dart';
 
 class LoginPasswordView extends StatelessWidget {
-  const LoginPasswordView({Key? key}) : super(key: key);
+  final String email; // Önceki ekrandan alınan e-posta adresi
+
+  const LoginPasswordView({Key? key, required this.email}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String enteredPassword = ''; // Kullanıcının girdiği şifreyi tutacak değişken
+
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -19,27 +25,17 @@ class LoginPasswordView extends StatelessWidget {
           children: [
             AuthPageInfo(
               title: 'Giriş yap',
-              description:
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ',
+              description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
             ),
             Expanded(
               child: Center(
-                // child: VerificationCodeTextInput(
-                //   length: 64,
-                //   onChanged: (value) {
-                //     // Burada verification code değiştiğinde yapılacak işlemleri belirleyebilirsiniz
-                //   },
-                //   onCompleted: (value) {
-                //     // Burada tüm verification code girildiğinde yapılacak işlemleri belirleyebilirsiniz
-                //   },
-                // ),
                 child: VerificationCodeInput(
                   length: 6,
                   onChanged: (value) {
-                    // Burada verification code değiştiğinde yapılacak işlemleri belirleyebilirsiniz
+                    enteredPassword = value; // Şifre değiştiğinde güncellemek için
                   },
                   onCompleted: (value) {
-                    // Burada tüm verification code girildiğinde yapılacak işlemleri belirleyebilirsiniz
+                    // Burada tüm şifre girildiğinde yapılacak işlemleri belirleyebilirsiniz
                   },
                 ),
               ),
@@ -49,11 +45,23 @@ class LoginPasswordView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Button(
-                    text: 'Giriş yap',
-                    textColor: Colors.black,
-                    onPressed: () {
-                      // Butona tıklandığında yapılacak işlemler
-                    }),
+                  text: 'Giriş yap',
+                  textColor: Colors.black,
+                  onPressed: () async {
+                    bool isPasswordCorrect = await FirebaseAuthService().checkPassword(email, enteredPassword);
+                    if (isPasswordCorrect) {
+                      // Eğer şifre doğruysa, WalletView'e yönlendir
+                      Navigator.pushNamed(context, AppRoutes.wallet);
+                    } else {
+                      // Eğer şifre yanlışsa, hata mesajı göster
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Şifre hatalı. Lütfen tekrar deneyin.'),
+                        ),
+                      );
+                    }
+                  },
+                ),
                 SizedBox(height: 10),
                 TextDivider(text: "veya"),
                 SizedBox(height: 10),

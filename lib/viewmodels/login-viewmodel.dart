@@ -1,31 +1,50 @@
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'package:flutter_wallet_app/service/firebase_auth.dart';
+import 'package:flutter_wallet_app/service/routes.dart';
 
 class LoginViewModel extends ChangeNotifier {
-  bool _userExists = false; // Kullanıcının varlığını temsil eden bir değişken
+  bool _emailExists = false;
+  bool _passwordCorrect = false;
 
-  bool get userExists => _userExists;
+  bool get emailExists => _emailExists;
+  bool get passwordCorrect => _passwordCorrect;
 
-  // Kullanıcı varlığını kontrol etmek için bir fonksiyon
-  void checkIfUserExists(String email) {
-    // Burada kullanıcının veritabanında kayıtlı olup olmadığını kontrol edecek kodları yazabilirsiniz
-    // Örneğin, gerçek bir veritabanı sorgusu gerçekleştirilebilir veya başka bir doğrulama işlemi yapılabilir
-    // Bu sadece bir örnek olduğu için, varsayılan olarak false dönüyoruz
-    // Gerçek bir uygulamada, bu kısmı gerçek veritabanı sorgusu ile değiştirmeniz gerekecek
-    // Bu örnekte, e-posta adresinin geçerli olup olmadığını kontrol ediyoruz
-    if (isValidEmail(email)) {
-      // Eğer e-posta adresi geçerliyse, kullanıcı var olarak işaretlenir
-      _userExists = true;
-    } else {
-      // Eğer e-posta adresi geçerli değilse, kullanıcı yok olarak işaretlenir
-      _userExists = false;
-    }
-    notifyListeners(); // Değişiklikleri dinleyen widget'lara haber verir
+  Future<bool> checkEmailExists(String email) async {
+    _emailExists = await FirebaseAuthService().checkEmailExists(email);
+    notifyListeners();
+    return _emailExists;
   }
 
-  // E-posta adresinin geçerli olup olmadığını kontrol eden yardımcı bir fonksiyon
-  bool isValidEmail(String email) {
-    // Gerçek bir e-posta adresi doğrulama mantığı burada yer alabilir
-    // Bu örnekte, sadece "@" sembolünün varlığını kontrol ediyoruz
-    return email.contains('@');
+  Future<bool> checkPassword(String email, String password) async {
+    _passwordCorrect = await FirebaseAuthService().checkPassword(email, password);
+    notifyListeners();
+    return _passwordCorrect;
+  }
+
+  Future<void> signIn(BuildContext context, String email) async {
+    bool emailExists = await checkEmailExists(email);
+    if (emailExists && _passwordCorrect) {
+      if (AppRoutes.routes.containsKey(AppRoutes.wallet)) {
+        Navigator.pushNamed(
+          context,
+          AppRoutes.wallet,
+          arguments: email,
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Giriş yapılamadı: Geçersiz rota.'),
+          ),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('E-posta adresi veya şifre hatalı.'),
+        ),
+      );
+    }
   }
 }
